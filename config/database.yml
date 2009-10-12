@@ -1,0 +1,13 @@
+development:
+  adapter: mysql
+  database: knowledgemapper_development
+  username: root
+  password:
+  socket: /tmp/mysql.sock
+  
+test:
+  adapter: mysql
+  database: knowledgemapper_test
+  username: root
+  password:
+  socket: /tmp/mysql.sock

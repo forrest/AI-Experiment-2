@@ -1,0 +1,6 @@
+TODO:
+
+1) switch to mysql activations
+    -grab just neurons that activate based on this map
+2) expand learning algorithm to strengthen and weaken
+3) Add prediction outputs
