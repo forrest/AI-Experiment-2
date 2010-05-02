@@ -11,7 +11,7 @@ require 'yaml'
 if ENV["logger"]=="loud"
   ActiveRecord::Base.logger = Logger.new(STDERR)
 else
-  logfile = File.open("#{RAILS_ROOT}/log/development.log","w")
+  logfile = File.open("#{RAILS_ROOT}/logs/development.log","w")
   ActiveRecord::Base.logger = Logger.new(logfile)
 end
 
