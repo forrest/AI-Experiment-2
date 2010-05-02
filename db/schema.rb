@@ -17,6 +17,7 @@ ActiveRecord::Schema.define(:version => 20090927053559) do
     t.integer "neuron_id"
   end
 
+  add_index "neuron_activations", ["active"], :name => "index_neuron_activations_on_active"
   add_index "neuron_activations", ["neuron_id"], :name => "index_neuron_activations_on_neuron_id"
 
   create_table "neurons", :force => true do |t|
@@ -27,12 +28,15 @@ ActiveRecord::Schema.define(:version => 20090927053559) do
     t.text    "all_children_ids"
   end
 
+  add_index "neurons", ["complexity"], :name => "index_neurons_on_complexity"
+
   create_table "pattern_memberships", :force => true do |t|
     t.integer "parent_id"
     t.integer "child_id"
     t.integer "sort_order", :default => 0
   end
 
+  add_index "pattern_memberships", ["child_id"], :name => "index_pattern_memberships_on_child_id"
   add_index "pattern_memberships", ["parent_id"], :name => "index_pattern_memberships_on_parent_id"
 
 end
