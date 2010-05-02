@@ -1,0 +1,6 @@
+AI Experiment 2
+=================
+
+This is just a little experiment for using ruby/mysql for developing neuroal networks. Trying to build the basics now, with plans to parallize across multiple machines later.
+
+NOTE: Does not actually work yet.
