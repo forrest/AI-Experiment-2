@@ -3,7 +3,8 @@ ENV["mode"] ||= "development"
 ENV["logger"] ||= "quiet"
 
 require "rubygems"
-require "activerecord"
+require "active_record"
+require "active_support"
 require "mysql"
 require 'yaml'
 

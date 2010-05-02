@@ -5,19 +5,34 @@ class ActivityMap
   end
   
   def update_activity(input = false)
-    age_all
+    age_level(1)
     activate_input_neuron(input) if input
-    run_through_step
+    
+    (2..max_level).each{|level|
+      process_level(level)
+    }
   end
   
   private
   
-  def age_all
-    ActiveRecord::Base.connection.execute("UPDATE neuron_activations SET neuron_activations.active_last_round = neuron_activations.active, neuron_activations.active = 0")
+  
+  def process_level(level)
+    to_check = Neuron.of_level(level).ready_to_fire
+    age_level(level)
+    
+    if to_check.count > 0
+      to_check.each(&:process)
+    end
+  end
+
+  def max_level
+    Neuron.maximum(:complexity)
   end
   
-  def reset
-    NeuronActivation.find_each{|na| na.update_attributes(:active => false, :active_last_round => false)}
+  def age_level(complexity)
+    ActiveRecord::Base.connection.execute(" UPDATE neuron_activations JOIN neurons ON (neuron_activations.neuron_id = neurons.id) 
+                                            SET neuron_activations.active_last_round = neuron_activations.active, neuron_activations.active = 0 
+                                            WHERE neurons.complexity = #{complexity}")
   end
   
   def activate_input_neuron(input)
@@ -25,10 +40,9 @@ class ActivityMap
     neuron.active = true
   end
   
-  def run_through_step
-    Neuron.can_by_processed.find_each{|n|
-      n.process
-    }
-  end
+  
+  def reset
+    NeuronActivation.find_each{|na| na.update_attributes(:active => false, :active_last_round => false)}
+  end  
   
 end

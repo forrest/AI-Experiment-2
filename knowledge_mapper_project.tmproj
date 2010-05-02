@@ -21,58 +21,56 @@
 	<integer>249</integer>
 	<key>metaData</key>
 	<dict>
+		<key>db/migrate/20090927053559_create_pattern_membership.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>45</integer>
+				<key>line</key>
+				<integer>12</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
 		<key>models/activity_map.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>5</integer>
+				<integer>20</integer>
 				<key>line</key>
-				<integer>30</integer>
+				<integer>20</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>13</integer>
-				<key>line</key>
-				<integer>28</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>5</integer>
-				<key>line</key>
-				<integer>30</integer>
-			</dict>
 		</dict>
 		<key>models/neuron.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>2</integer>
+				<integer>48</integer>
 				<key>line</key>
-				<integer>79</integer>
+				<integer>38</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>23</integer>
 		</dict>
-		<key>models/neuron_activation.rb</key>
+		<key>models/structure_map.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>13</integer>
+				<integer>2</integer>
 				<key>line</key>
-				<integer>14</integer>
+				<integer>1</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -83,7 +81,7 @@
 	<key>openDocuments</key>
 	<array>
 		<string>models/neuron.rb</string>
-		<string>models/neuron_activation.rb</string>
+		<string>db/migrate/20090927053559_create_pattern_membership.rb</string>
 		<string>models/activity_map.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>

@@ -8,9 +8,11 @@ class CreateNeurons < ActiveRecord::Migration
       t.text :all_children_ids #serialized
     end
     
+    add_index :neurons, :complexity
   end
 
   def self.down
+    remove_index :neurons, :complexity
     drop_table :neurons
   end
 end

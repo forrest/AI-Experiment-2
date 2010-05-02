@@ -5,10 +5,12 @@ class CreatePatternMembership < ActiveRecord::Migration
       t.integer :sort_order, :default => 0
     end
     add_index :pattern_memberships, :parent_id
+    add_index :pattern_memberships, :child_id
   end
 
   def self.down
     remove_index :pattern_memberships, :parent_id
+    remove_index :pattern_memberships, :child_id
     drop_table :pattern_memberships
   end
 end

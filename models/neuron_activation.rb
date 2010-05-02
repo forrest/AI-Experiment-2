@@ -9,10 +9,6 @@ class NeuronActivation <  ActiveRecord::Base
       errors.add(:active, "should not be able to be active two turns in a row.")
     end
   end
-  
-  def status=(new_status)
-    self.active = new_status
-    self.save
-  end
+
   
 end

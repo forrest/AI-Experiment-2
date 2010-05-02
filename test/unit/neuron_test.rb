@@ -2,6 +2,11 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class NeuronTest < ActiveSupport::TestCase
 
+  def setup
+    Neuron.destroy_all
+    NeuronActivation.destroy_all
+  end
+
   test "storing space but failing validation when needed" do
     n = Neuron.create(:input_char => " ")
     assert n.valid?, "did not create neuron"
@@ -29,9 +34,9 @@ class NeuronTest < ActiveSupport::TestCase
   end
   
   test "Patterns are getting stored correctly" do
-    @a = Neuron.create(:input_char => "a")
-    @b = Neuron.create(:input_char => "b")
-    @c = Neuron.create(:input_char => "c")
+    @a = Neuron.create!(:input_char => "a")
+    @b = Neuron.create!(:input_char => "b")
+    @c = Neuron.create!(:input_char => "c")
     
     @complex = Neuron.create(:array_of_neurons => [@c,@a,@b])
     
@@ -79,6 +84,40 @@ class NeuronTest < ActiveSupport::TestCase
     assert_nil Neuron.find_by_pattern([@a,@b,@c]), "should not return a match"
     
     assert Neuron.find_by_pattern([@c,@a,@b]), "should return a match"
+  end
+  
+  test "check the ready_to_fire named_scope" do
+    #neurons are ordered [c, a, b]
+    test_Patterns_are_getting_stored_correctly
+    @cab = @complex
+    @ab = Neuron.create(:array_of_neurons => [@a,@b])
+    @cab.reset!
+    @ab.reset!
+    
+    assert_equal [], Neuron.ready_to_fire
+    
+    @c.active = true
+    @a.active = false
+    @b.active = false
+    assert_equal [@cab], Neuron.ready_to_fire
+    @cab.process
+    @ab.process
+    
+    @c.active = false
+    @a.active = true
+    @b.active = false
+    assert_equal [@cab, @ab], Neuron.ready_to_fire
+    @cab.process
+    @ab.process
+
+    @c.active = false
+    @a.active = false
+    @b.active = true
+    assert_equal [@cab, @ab], Neuron.ready_to_fire
+    @cab.process
+    @ab.process
+    
+    assert_equal [], Neuron.ready_to_fire
   end
   
 end

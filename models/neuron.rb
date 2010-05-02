@@ -2,11 +2,12 @@ class Neuron <  ActiveRecord::Base
   has_one :neuron_activation
   
   has_many :pattern_memberships, :foreign_key => "parent_id"
-  has_many :child_neurons, :through => :pattern_memberships, :source => :child
+  has_many :child_neurons, :through => :pattern_memberships, :source => :child#, :order => "pattern_memberships.sort_order"
   
   has_many :parent_memberships, :foreign_key => "child_id", :class_name => "PatternMembership"
   has_many :parent_neurons, :through => :parent_memberships, :source => :parent
   
+  #this is an array of the sorted IDs of this neurons direct children. This is used to quickly find possible matches.
   serialize :all_children_ids, Array
   
   validates_uniqueness_of :all_children_ids, :on => :create, :message => "must be unique"
@@ -24,6 +25,15 @@ class Neuron <  ActiveRecord::Base
   named_scope :can_by_processed, :conditions => ["complexity > 1"], :order => "complexity"
   named_scope :active_this_round, :joins => :neuron_activation, :conditions => {:neuron_activations => {:active => true}}
   named_scope :active_last_round, :joins => :neuron_activation, :conditions => {:neuron_activations => {:active_last_round => true}}
+  named_scope :of_level, lambda{|*args| 
+    {:conditions => {:complexity => args[0].to_i}}
+  }
+  
+  named_scope :ready_to_fire, {:joins => "JOIN pattern_memberships ON (pattern_memberships.parent_id = neurons.id AND pattern_memberships.sort_order = neurons.active_up_to)
+                                            JOIN neurons AS children ON (pattern_memberships.child_id = children.id)
+                                            JOIN neuron_activations as child_activations ON (child_activations.neuron_id = children.id)",
+                                  :conditions => ["child_activations.active = ?", true], :readonly => false
+  }
   
   attr_writer :array_of_neurons
   attr_accessible :array_of_neurons, :input_char
@@ -40,8 +50,8 @@ class Neuron <  ActiveRecord::Base
     child_ids = []
     @array_of_neurons.each{|n|
       child_ids << n.id
-      child_ids.concat(self.child_neurons.collect(&:id))
     }
+    child_ids.concat(self.child_neurons.collect(&:id))
     child_ids.uniq!
     child_ids.sort!
     self.all_children_ids = child_ids
@@ -62,6 +72,7 @@ class Neuron <  ActiveRecord::Base
   end
   
   def ordered_children
+    #child_neurons
     self.pattern_memberships.all(:order => "sort_order", :include => :child).collect(&:child)
   end
   
@@ -79,7 +90,7 @@ class Neuron <  ActiveRecord::Base
   end
   
   def active=(is_active)
-    self.neuron_activation.status = is_active
+    self.neuron_activation.update_attribute(:active, is_active)
   end
   
   def active?
@@ -87,7 +98,7 @@ class Neuron <  ActiveRecord::Base
   end
   
   def process
-    if self.ordered_children[self.active_up_to].active?
+    if !self.ordered_children.empty? and self.ordered_children[self.active_up_to].active?
       self.active_up_to+=1
       if self.active_up_to>=self.pattern_memberships.count
         self.active_up_to = 0
@@ -95,8 +106,8 @@ class Neuron <  ActiveRecord::Base
       end
     else
       self.active_up_to = 0
-      self.save
     end
+    self.save
   end
   
   def to_s
@@ -115,5 +126,10 @@ class Neuron <  ActiveRecord::Base
     end
     return str
   end
+     
+  def reset!
+    update_attribute(:active_up_to, 0)
+    active = false
+  end  
     
 end

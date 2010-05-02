@@ -6,9 +6,11 @@ class CreateNeuronActivations < ActiveRecord::Migration
     end
     
     add_index :neuron_activations, :neuron_id
+    add_index :neuron_activations, :active
   end
 
   def self.down
+    remove_index :neuron_activations, :active
     remove_index :neuron_activations, :neuron_id
     drop_table :neuron_activations
   end
